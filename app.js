@@ -13,4 +13,3 @@ app.use('/', routes);
 app.listen(3000, function () {
 	console.log('the server is now initialized and listening on port 3000');
 });
-

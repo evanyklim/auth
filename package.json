@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "authentication project",
   "dependencies": {
+    "body-parser": "^1.12.2",
     "express": "^4.11.2",
     "mongoose": "^4.0.1"
   },

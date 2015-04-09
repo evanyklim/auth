@@ -18,9 +18,7 @@ router.get('/signup', function (req, res, next) {
 	res.sendFile(signupHtmlPath);
 });
 
-router.post('/signup', function (req, res, next) {
-	console.log(req.body);
-	
+router.post('/signup', function (req, res, next) {	
 	userProfile.create(req.body, function(err, user) {
 		if (err) return next(err);
 
@@ -34,9 +32,11 @@ router.get('/login', function (req, res, next) {
 });
 
 router.post('/login', function (req, res, next) {
-
-	console.log(req.body);
-	res.redirect('/success');
+	userProfile.findOne( req.body , function(err, user) {
+		if (err) return next(err);
+		if (!user) { res.redirect('/failure'); }
+		else { res.redirect('/success'); }
+	});
 });
 
 router.get('/success', function (req, res) {

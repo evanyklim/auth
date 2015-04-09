@@ -1,7 +1,7 @@
 var path = require('path');
 var router = require('express').Router();
-var models = require('../models');
-var user = models.userProfile;
+var userProfile = require('../models');
+
 var indexHtmlPath = path.join(__dirname, '../templates/index.html');
 var signupHtmlPath = path.join(__dirname, '../templates/signup.html');
 var loginHtmlPath = path.join(__dirname, '../templates/login.html');
@@ -20,7 +20,12 @@ router.get('/signup', function (req, res, next) {
 
 router.post('/signup', function (req, res, next) {
 	console.log(req.body);
-	res.redirect('/success');
+	
+	userProfile.create(req.body, function(err, user) {
+		if (err) return next(err);
+
+		res.redirect('/success');
+	});
 });
 
 router.get('/login', function (req, res, next) {

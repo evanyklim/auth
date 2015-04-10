@@ -11,7 +11,7 @@ var failureHtmlPath = path.join(__dirname, '../templates/failure.html');
 
 function sprinkleSalt () {
 
-    return crypto.randomBytes(16).toString('base64')
+    return crypto.randomBytes(16).toString('base64');
 }
 
 function hashAway (pwdByUser, saltyness) {
@@ -20,6 +20,14 @@ function hashAway (pwdByUser, saltyness) {
 }
 
 router.get('/', function (req, res, next) {
+	if (!req.session.counter) {
+		req.session.counter = 1;
+	}
+	else {
+		req.session.counter++;
+	}
+
+	console.log(req.session);
 
 	res.sendFile(indexHtmlPath);
 });
@@ -30,6 +38,8 @@ router.get('/signup', function (req, res, next) {
 });
 
 router.post('/signup', function (req, res, next) {	
+	
+	
 
 	var salt = sprinkleSalt();
 

@@ -5,7 +5,8 @@ mongoose.connection.on('error', console.error.bind(console, "connection error: "
 var Schema = new mongoose.Schema({
     username: String,
     password: String, 
-    salt: { type: String }
+    salt: { type: String },
+    sid: String
 });
 
 module.exports = mongoose.model('userProfile', Schema);

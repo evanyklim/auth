@@ -9,8 +9,14 @@ var loginHtmlPath = path.join(__dirname, '../templates/login.html');
 var successHtmlPath = path.join(__dirname, '../templates/success.html');
 var failureHtmlPath = path.join(__dirname, '../templates/failure.html');
 
-function hashAway (pwdByUser) {
-	return crypto.pbkdf2Sync(pwdByUser, '', 0, 16).toString('base64');
+function sprinkleSalt () {
+
+    return crypto.randomBytes(16).toString('base64')
+}
+
+function hashAway (pwdByUser, saltyness) {
+
+	return crypto.pbkdf2Sync(pwdByUser, saltyness, 0, 16).toString('base64');
 }
 
 router.get('/', function (req, res, next) {
@@ -25,9 +31,12 @@ router.get('/signup', function (req, res, next) {
 
 router.post('/signup', function (req, res, next) {	
 
+	var salt = sprinkleSalt();
+
     var userObj = {
     	username: req.body.username,
-    	password: hashAway(req.body.password)
+    	password: hashAway(req.body.password, salt),
+    	salt: salt
     };
 
 	userProfile.create(userObj, function(err, user) {
@@ -48,7 +57,8 @@ router.post('/login', function (req, res, next) {
 		if (!user) { res.redirect('/failure'); }
 		else {
 
-			if (hashAway(req.body.password) === user.password) {
+			var salt;
+			if (hashAway(req.body.password, salt) === user.password) {
 				res.redirect('/success'); 
 			} else {
 				res.redirect('/failure');
